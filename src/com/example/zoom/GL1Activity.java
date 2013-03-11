@@ -81,14 +81,18 @@ public class GL1Activity extends Activity implements OnTouchListener {
 			gl.glMatrixMode(GL10.GL_MODELVIEW);
 			gl.glLoadIdentity();
 			GLU.gluLookAt(gl, 0, 0, -5, 0, 0, 0, 0, 3, 0);
+				
 			if (x != 0 && y != 0){	
+			
 			gl.glTranslatef(0, 0, zoomz);
+			
 			if (zoomz < 25) {
 				zoomz-=.1;
 			}else{
 			zoomz = 0;
+			
 			}
-				square.draw(gl);			
+			square.draw(gl);
 			};
 		
 			}
