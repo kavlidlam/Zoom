@@ -2,22 +2,30 @@ package com.example.zoom;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
-
 import android.app.Activity;
+import android.content.Intent;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLU;
 import android.os.Bundle;
 import android.view.MotionEvent;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.view.WindowManager;
 
-public class GL1Activity extends Activity implements OnTouchListener {
+public class GL1Activity extends Activity implements Runnable,OnTouchListener {
 	
 	GLSurfaceView ourSurface;
 	float x,y;
+	private GL1Square square;
+	float zoomz;
+	public void GL1Renderer (){
+		square = new GL1Square();
+	}
+	
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +39,13 @@ public class GL1Activity extends Activity implements OnTouchListener {
 		y=0;
 		ourSurface.setRenderer(new GL1Renderer()); //links to GL1Renderer
 		setContentView(ourSurface);
+		
+		
+	}
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
@@ -45,23 +60,47 @@ public class GL1Activity extends Activity implements OnTouchListener {
 		// TODO Auto-generated method stub
 		super.onResume();
 		ourSurface.onResume();
-	}
+		
+		}
+	
 
+	
 	@Override
-	public boolean onTouch(View v, MotionEvent event) {
+	public boolean onTouch(View OurSurface, MotionEvent event) {
 		// TODO Auto-generated method stub
-		x = event.getX();
-		y = event.getY();
-		return false;
+		switch(event.getAction()){
+		case MotionEvent.ACTION_DOWN:	
+			x = event.getX();
+			y = event.getY();
+			break;
+		case MotionEvent.ACTION_POINTER_DOWN:
+			x = event.getX();
+			y = event.getY();
+			break;
+			
+		
+			
+		
+		}
+		return true;
 	} 
 	
+	
+	
+
+
 	public class GL1Renderer implements Renderer {
 		
 		private GL1Square square;
 		float zoomz;
-		public GL1Renderer (){
+		float endTime;
+		float dt;
+		float startTime;
+		
+		public GL1Renderer(){
 			square = new GL1Square();
 		}
+		
 		
 		@Override
 		public void onSurfaceCreated(GL10 gl, EGLConfig eglconfig) {
@@ -70,7 +109,7 @@ public class GL1Activity extends Activity implements OnTouchListener {
 		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_FASTEST);
 		gl.glClearColor(.1f, .1f, .1f, 1); //painting background
 		gl.glClearDepthf(1f);
-			
+		startTime = System.currentTimeMillis();	
 		}
 
 		@Override
@@ -81,18 +120,34 @@ public class GL1Activity extends Activity implements OnTouchListener {
 			gl.glMatrixMode(GL10.GL_MODELVIEW);
 			gl.glLoadIdentity();
 			GLU.gluLookAt(gl, 0, 0, -5, 0, 0, 0, 0, 3, 0);
+			Thread timer = new Thread(){
+				public void run(){
+					try{
+						startTime = System.currentTimeMillis();
+						if (x != 0 && y != 0){	
+							gl.glTranslatef(0, 0, zoomz);
+							if (zoomz < 25) {
+								zoomz-=.1;
+							}else{
+							zoomz = 0;
+							}
+					} catch (InterruptedException e){
+						e.printStackTrace();
+					}finally{
+						square.draw(gl);
+						endTime = System.currentTimeMillis();
+						dt = endTime - startTime;
+						if (dt<33)
+							Thread.sleep(33-dt);
+					}
+
 			
-			if (x != 0 && y != 0){	
-			gl.glTranslatef(0, 0, zoomz);
-			if (zoomz < 50) {
-				zoomz-=.1;		
 			
+					
+			
+			};
+		
 			}
-			
-			square.draw(gl);
-			
-			}
-		}
 
 		@Override
 		public void onSurfaceChanged(GL10 gl, int width, int height) {
@@ -105,7 +160,16 @@ public class GL1Activity extends Activity implements OnTouchListener {
 			}
 		}
 
+
+
+
+
+	
+	}
+
+	
+
 		
 
-}
+
 
