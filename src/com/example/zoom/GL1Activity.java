@@ -13,17 +13,10 @@ import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.view.WindowManager;
 
-public class GL1Activity extends Activity implements Runnable,OnTouchListener {
+public class GL1Activity extends Activity implements OnTouchListener {
 	
 	GLSurfaceView ourSurface;
 	float x,y;
-	private GL1Square square;
-	float zoomz;
-	public void GL1Renderer (){
-		square = new GL1Square();
-	}
-	
-	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,12 +30,6 @@ public class GL1Activity extends Activity implements Runnable,OnTouchListener {
 		y=0;
 		ourSurface.setRenderer(new GL1Renderer()); //links to GL1Renderer
 		setContentView(ourSurface);
-		
-	}
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -56,35 +43,17 @@ public class GL1Activity extends Activity implements Runnable,OnTouchListener {
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		ourSurface.onResume();
-		
+		ourSurface.onResume();		
 		}
 	
 
-	
 	@Override
 	public boolean onTouch(View OurSurface, MotionEvent event) {
 		// TODO Auto-generated method stub
-		switch(event.getAction()){
-		case MotionEvent.ACTION_DOWN:	
-			x = event.getX();
-			y = event.getY();
-			break;
-		case MotionEvent.ACTION_POINTER_DOWN:
-			x = event.getX();
-			y = event.getY();
-			break;
-			
-		
-			
-		
-		}
-		return true;
+		x = event.getX();
+		y = event.getY();
+		return false;
 	} 
-	
-	
-	
-
 
 	public class GL1Renderer implements  Renderer {
 		
