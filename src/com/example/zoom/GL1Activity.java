@@ -3,13 +3,11 @@ package com.example.zoom;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 import android.app.Activity;
-import android.content.Intent;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLU;
 import android.os.Bundle;
 import android.view.MotionEvent;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.Window;
@@ -39,7 +37,6 @@ public class GL1Activity extends Activity implements Runnable,OnTouchListener {
 		y=0;
 		ourSurface.setRenderer(new GL1Renderer()); //links to GL1Renderer
 		setContentView(ourSurface);
-		
 		
 	}
 	@Override
@@ -89,18 +86,13 @@ public class GL1Activity extends Activity implements Runnable,OnTouchListener {
 	
 
 
-	public class GL1Renderer implements Renderer {
+	public class GL1Renderer implements  Renderer {
 		
 		private GL1Square square;
 		float zoomz;
-		float endTime;
-		float dt;
-		float startTime;
-		
-		public GL1Renderer(){
+		public GL1Renderer (){
 			square = new GL1Square();
 		}
-		
 		
 		@Override
 		public void onSurfaceCreated(GL10 gl, EGLConfig eglconfig) {
@@ -109,7 +101,7 @@ public class GL1Activity extends Activity implements Runnable,OnTouchListener {
 		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_FASTEST);
 		gl.glClearColor(.1f, .1f, .1f, 1); //painting background
 		gl.glClearDepthf(1f);
-		startTime = System.currentTimeMillis();	
+			
 		}
 
 		@Override
@@ -120,31 +112,14 @@ public class GL1Activity extends Activity implements Runnable,OnTouchListener {
 			gl.glMatrixMode(GL10.GL_MODELVIEW);
 			gl.glLoadIdentity();
 			GLU.gluLookAt(gl, 0, 0, -5, 0, 0, 0, 0, 3, 0);
-			Thread timer = new Thread(){
-				public void run(){
-					try{
-						startTime = System.currentTimeMillis();
-						if (x != 0 && y != 0){	
-							gl.glTranslatef(0, 0, zoomz);
-							if (zoomz < 25) {
-								zoomz-=.1;
-							}else{
-							zoomz = 0;
-							}
-					} catch (InterruptedException e){
-						e.printStackTrace();
-					}finally{
-						square.draw(gl);
-						endTime = System.currentTimeMillis();
-						dt = endTime - startTime;
-						if (dt<33)
-							Thread.sleep(33-dt);
-					}
-
-			
-			
-					
-			
+			if (x != 0 && y != 0){	
+			gl.glTranslatef(0, 0, zoomz);
+			if (zoomz < 25) {
+				zoomz-=.1;
+			}else{
+			zoomz = 0;
+			}
+				square.draw(gl);			
 			};
 		
 			}
