@@ -34,14 +34,12 @@ public class GL1Activity extends Activity implements OnTouchListener {
 
 	@Override
 	protected void onPause() {
-		// TODO Auto-generated method stub
 		super.onPause();
 		ourSurface.onPause();
 	}
 
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		ourSurface.onResume();		
 		}
@@ -49,28 +47,24 @@ public class GL1Activity extends Activity implements OnTouchListener {
 
 	@Override
 	public boolean onTouch(View OurSurface, MotionEvent event) {
-		// TODO Auto-generated method stub
 		x = event.getX();
 		y = event.getY();
 		return false;
-	} 
+		} 
 
 	public class GL1Renderer implements  Renderer {
-		
 		private GL1Square square;
-		float zoomz;
+		float zoomz=0;
 		public GL1Renderer (){
 			square = new GL1Square();
 		}
 		
 		@Override
 		public void onSurfaceCreated(GL10 gl, EGLConfig eglconfig) {
-			// TODO Auto-generated method stub
 		gl.glDisable(GL10.GL_DITHER);
 		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_FASTEST);
 		gl.glClearColor(.1f, .1f, .1f, 1); //painting background
-		gl.glClearDepthf(1f);
-			
+		gl.glClearDepthf(1f);	
 		}
 
 		@Override
@@ -81,20 +75,23 @@ public class GL1Activity extends Activity implements OnTouchListener {
 			gl.glMatrixMode(GL10.GL_MODELVIEW);
 			gl.glLoadIdentity();
 			GLU.gluLookAt(gl, 0, 0, -5, 0, 0, 0, 0, 3, 0);
-				
 			if (x != 0 && y != 0){	
-			
+				
 			gl.glTranslatef(0, 0, zoomz);
-			
-			if (zoomz < 25) {
-				zoomz-=.1;
-			}else{
-			zoomz = 0;
-			
-			}
-			square.draw(gl);
+				if (zoomz >-5) {
+				zoomz-=.1;	
+					}			
+				if (zoomz<-5 && x>0 && y>0){
+					x = 0;
+					y = 0;
+					zoomz =0;
+				}
 			};
-		
+			square.draw(gl);
+			/*if (x>0 && y>0){
+				x = 0;
+				y = 0;
+			}*/
 			}
 
 		@Override
